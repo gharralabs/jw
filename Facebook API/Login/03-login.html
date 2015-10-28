@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script>
+
+        // https://developers.facebook.com/tools/explorer/
+        var usuario = {};
+
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1675430056076976',
+                xfbml: true,
+                version: 'v2.5'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function login() {
+
+            FB.getLoginStatus(function (res) {
+                if (res.status === 'connected') {
+                    usuario.userId = res.authResponse.userID;
+                    $("#user-id").text('User Id: ' + usuario.userId);
+                }
+                else {
+                    FB.login(function (res) {
+                        if (res.authResponse) {
+                            usuario.userId = res.authResponse.userID;
+                            $("#user-id").text('User Id: ' + usuario.userId);
+                        }
+                        else
+                            alert('Usuário fechou a janela de login.');
+
+                    }, { scope: "user_friends" });
+
+                    //, { scope: "user_friends" }
+
+                    //{ scope: 'email,user_friends,user_photos' }
+
+                    // Email :           –  {scope: ‘email’}
+                    // Lista de amigos:  –  {scope: ‘user_friends’}
+                    // Fotos e videos:   –  {scope: ‘user_photos,user_videos’}
+
+                }
+            });
+        }
+
+        function logout() {
+            FB.logout(function (res) {
+                alert('usuario desconectado');
+            });
+        }
+
+
+        function atualizarFotoPerfil() {
+
+            // https://graph.facebook.com/v2.5/910403535711174/picture
+
+            $("#foto-perfil")[0].src = 'http://graph.facebook.com/v2.5/' + usuario.userId + '/picture?type=large';
+            // small, normal, album, large, square
+
+            //FB.api("/" + usuario.userId + "/picture",
+            //    function (res) {
+            //        if (res && !res.error) {
+            //            $("#foto-perfil")[0].src = res.data.url;
+            //        }
+            //    });
+        }
+
+
+
+        function postar()
+        {
+
+            var msg = prompt('Mensagem:');
+
+            FB.ui({
+                method: 'feed',
+                name: 'JW',
+                caption: 'Jogue e compartilhe com seus amigos!',
+                description: (msg),
+                link: 'http://www.gharralabs.com'
+
+            }, function (res) {
+                alert(res);
+            });
+        }
+
+
+        function listarAmigos() {
+            FB.api('/me/friends', function (response) {
+                console.log(response);
+                alert(response);
+            })
+        };
+
+    </script>
+    <!--<fb:login-button scope="public_profile,email" onlogin="alert('aki');">
+    </fb:login-button>-->
+
+    <p id="user-id">User Id:</p>
+
+    <img src="" id="foto-perfil" />
+    
+            <button onclick="login();">Login</button>
+            <button onclick="logout();">Logout</button>
+            <button onclick="atualizarFotoPerfil()">Atualizar Foto</button>
+            <button onclick="postar()">Postar nos Feeds</button>
+            <button onclick="listarAmigos()">Amigos</button>
+    
+    
+    
+    
+</body>
+</html>

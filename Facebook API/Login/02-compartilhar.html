@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script>
+        function compartilhar()
+        {
+            FB.ui({
+                    method: 'share',
+                    href: 'http://gharralabs.com.br'
+                    }, function (response) { alert('bla bla bla') });
+
+        }
+
+    </script>
+</head>
+<body>
+    <script src="facebook.js"></script>
+    <button onclick="compartilhar();">Compartilhar</button>
+</body>
+</html>
